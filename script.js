@@ -109,7 +109,7 @@ function move(direction) {
     }
 
     if (newHead.x < 0 || newHead.x >= 13 || newHead.y < 0 || newHead.y >= 13) {
-        alert("Game Over! Collision with wall");
+        //alert("Game Over! Collision with wall");
         location.reload();
         return;
     }
