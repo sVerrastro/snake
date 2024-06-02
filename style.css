@@ -18,7 +18,7 @@ main {
         width: fit-content;
     }
 
-    .colonna, .serpente {
+    .colonna, .serpente, .mela {
         height: 7vh;
         width: 7vh;
         align-content: center;
@@ -30,6 +30,11 @@ main {
         color: black;
         background-color: rgb(0, 100, 0);
         border-radius: 2vh;
+    }
+    .mela {
+        color: red;
+        background-color: rgb(100, 0, 0);
+        border-radius: 5vh;
     }
 }
 

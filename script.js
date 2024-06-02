@@ -1,15 +1,30 @@
 var game = [];
 var snake = [];
 var direction = 'right';
+var apple;
+
+var timerInterval;
+var gameInterval;
+var startTime;
+var speed = 350;
+var maxSeconds = 10;
 
 function SnakeElement(y, x) {
     this.x = x;
     this.y = y;
 }
 
+function Apple() {
+    try{
+        do {
+            this.x = Math.floor(Math.random() * 13);
+            this.y = Math.floor(Math.random() * 13);
+        } while (game[this.y][this.x] == 1);
+    } catch {}
+}
+
+apple = new Apple();
 snake.unshift(new SnakeElement(6, 3));
-snake.unshift(new SnakeElement(6, 2));
-snake.unshift(new SnakeElement(6, 1));
 
 drawGrid();
 startGame();
@@ -21,10 +36,12 @@ function drawSnake() {
             game[y][x] = 0;
         }
     }
-    
+
     snake.forEach(element => {
         game[element.y][element.x] = 1;
     });
+
+    game[apple.y][apple.x] = 2;
 }
 
 function drawGrid() {
@@ -34,7 +51,6 @@ function drawGrid() {
     griglia.innerHTML = "";
 
     for (let y = 0; y < 13; y++) {
-
         let row = document.createElement('div');
         row.classList.add("riga");
         row.id = ('row' + y);
@@ -44,66 +60,104 @@ function drawGrid() {
 
             let col = document.createElement('div');
             if (game[y][x] == 1) col.classList.add("serpente");
-                else col.classList.add("colonna");
+            else if (game[y][x] == 2) col.classList.add("mela");
+            else col.classList.add("colonna");
             row.appendChild(col);
         }
     }
 }
 
 function startGame() {
+    startTimer();
     document.addEventListener('keydown', function(event) {
         switch(event.key) {
             case 'ArrowUp':
-                if (direction !== 'bottom') direction = 'top';
+                if (direction != 'bottom') direction = 'top';
                 break;
             case 'ArrowDown':
-                if (direction !== 'top') direction = 'bottom';
+                if (direction != 'top') direction = 'bottom';
                 break;
             case 'ArrowLeft':
-                if (direction !== 'right') direction = 'left';
+                if (direction != 'right') direction = 'left';
                 break;
             case 'ArrowRight':
-                if (direction !== 'left') direction = 'right';
+                if (direction != 'left') direction = 'right';
                 break;
         }
     });
 
-    setInterval(function() {
-        move(direction);
-    }, 300);
+    setInterval(function() {move(direction);}, speed);
 }
 
 function move(direction) {
     let head = snake[0];
+    let newHead;
 
     switch(direction) {
         case 'top':
-            snake.unshift(new SnakeElement(head.y - 1, head.x));
+            newHead = new SnakeElement(head.y - 1, head.x);
             break;
         case 'bottom':
-            snake.unshift(new SnakeElement(head.y + 1, head.x));
+            newHead = new SnakeElement(head.y + 1, head.x);
             break;
         case 'left':
-            snake.unshift(new SnakeElement(head.y, head.x - 1));
+            newHead = new SnakeElement(head.y, head.x - 1);
             break;
         case 'right':
-            snake.unshift(new SnakeElement(head.y, head.x + 1));
+            newHead = new SnakeElement(head.y, head.x + 1);
             break;
     }
-    snake.pop();
 
-    
-    if (snake[0].x == -1 || snake[0].x == 13 || snake[0].y == -1 || snake[0].y == 13) {
-        alert('game over');
+    if (newHead.x < 0 || newHead.x >= 13 || newHead.y < 0 || newHead.y >= 13) {
+        alert("Game Over! Collision with wall");
         location.reload();
+        return;
     }
 
-    for (let i = 1; i < snake.length; i++) {
-        if (snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
-            //alert('game over');
-            //location.reload();
+    for (let i = 0; i < snake.length; i++) {
+        if (newHead.x == snake[i].x && newHead.y == snake[i].y) {
+            //alert("Game Over! Collision with self");
+            location.reload();
+            return;
         }
     }
 
+    if (newHead.x == apple.x && newHead.y == apple.y) {
+        apple = new Apple();
+    } else {
+        snake.pop();
+    }
+
+    snake.unshift(newHead);
+
     drawGrid();
+}
+
+function startTimer() {
+    startTime = new Date().getTime();
+    timerInterval = setInterval(updateTimer, 1000);
+}
+    
+function stopTimer() {
+    clearInterval(timerInterval);
+}
+    
+function updateTimer() {
+    var now = new Date().getTime();
+    var elapsedTime = now - startTime;
+    var minutes = Math.floor(elapsedTime / (1000 * 60));
+    var seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+    seconds = (seconds < 10 ? "0" : "") + seconds;
+    console.log(minutes + ":" + seconds);
+
+    if (seconds == maxSeconds) {
+        if (speed > 50) {
+            maxSeconds+= 10;
+            speed -= 25;
+
+            //clearInterval(function() {move(direction)});
+            //setInterval(function() {move(direction), speed});
+            console.log(speed)
+        }
+    }
 }
