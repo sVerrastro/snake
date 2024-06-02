@@ -1,0 +1,43 @@
+header {
+    text-align: center;
+}
+
+main {
+
+    color: white;
+
+    .container {
+        margin-top: 3vh;
+        width: fit-content;
+        background-color: rgb(15, 15, 15);
+        border: 1vh solid red;
+    }
+
+    .riga {
+        display: flex;
+        width: fit-content;
+    }
+
+    .colonna, .serpente {
+        height: 7vh;
+        width: 7vh;
+        align-content: center;
+        text-align: center;
+        background-color: rgb(15, 15, 15);
+    }
+
+    .serpente {
+        color: black;
+        background-color: rgb(0, 100, 0);
+        border-radius: 2vh;
+    }
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+}
+
+div {
+    /*border: 1px solid red;*/
+}
