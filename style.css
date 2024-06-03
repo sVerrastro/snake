@@ -10,7 +10,7 @@ main {
         margin-top: 3vh;
         width: fit-content;
         background-color: rgb(15, 15, 15);
-        border: 1vh solid red;
+        border: 1vh solid rgb(185, 0, 0);
     }
 
     .riga {
@@ -30,11 +30,19 @@ main {
         color: black;
         background-color: rgb(0, 100, 0);
         border-radius: 2vh;
+        border: 2px solid rgb(16, 36, 14)
     }
     .mela {
         color: red;
-        background-color: rgb(100, 0, 0);
+        background-color: rgb(142, 1, 1);
         border-radius: 5vh;
+        border: 2px solid rgb(100, 0, 0);
+    }
+
+    #head {
+        color: black;
+        background-color: rgb(68, 156, 17);
+        border: 2px solid rgb(56, 153, 0);
     }
 }
 

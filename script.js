@@ -4,9 +4,8 @@ var direction = 'right';
 var apple;
 
 var timerInterval;
-var gameInterval;
 var startTime;
-var speed = 350;
+var speed = 200;
 var maxSeconds = 10;
 
 function SnakeElement(y, x) {
@@ -37,8 +36,10 @@ function drawSnake() {
         }
     }
 
+    let count = 0;
     snake.forEach(element => {
-        game[element.y][element.x] = 1;
+        game[element.y][element.x] = (count == 0) ? 3 : 1;
+        count++;
     });
 
     game[apple.y][apple.x] = 2;
@@ -49,6 +50,7 @@ function drawGrid() {
 
     let griglia = document.getElementById("grid");
     griglia.innerHTML = "";
+    let k = 0;
 
     for (let y = 0; y < 13; y++) {
         let row = document.createElement('div');
@@ -59,10 +61,19 @@ function drawGrid() {
         for (let x = 0; x < 13; x++) {
 
             let col = document.createElement('div');
-            if (game[y][x] == 1) col.classList.add("serpente");
-            else if (game[y][x] == 2) col.classList.add("mela");
-            else col.classList.add("colonna");
+            if (game[y][x] == 1) {
+                col.classList.add("serpente");
+                col.style.transform = ("scale(.8)");
+            } else if (game[y][x] == 2) {
+                col.classList.add("mela");
+                col.style.transform = ("scale(.7)");
+            } else if (game[y][x] == 3) {
+                col.classList.add("serpente");
+                col.id = ('head');
+            } else col.classList.add("colonna");
             row.appendChild(col);
+
+            
         }
     }
 }
@@ -86,7 +97,7 @@ function startGame() {
         }
     });
 
-    setInterval(function() {move(direction);}, speed);
+    intervallo = setInterval(function() {move(direction);}, speed);
 }
 
 function move(direction) {
@@ -109,14 +120,14 @@ function move(direction) {
     }
 
     if (newHead.x < 0 || newHead.x >= 13 || newHead.y < 0 || newHead.y >= 13) {
-        //alert("Game Over! Collision with wall");
+        console.log("DEBUG>>Collision with wall");
         location.reload();
         return;
     }
 
     for (let i = 0; i < snake.length; i++) {
         if (newHead.x == snake[i].x && newHead.y == snake[i].y) {
-            //alert("Game Over! Collision with self");
+            console.log("DEBUG>>Collision with self");
             location.reload();
             return;
         }
